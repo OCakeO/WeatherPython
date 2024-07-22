@@ -1,5 +1,5 @@
 # WeatherPython
-Потребутеся установить Gjango и openpyxl для excel. 
+Потребутеся установить Django и openpyxl для excel. 
 Чтобы запустить проект, нужно: 
 1. Перейти через консоль в дерикторию site_weather
 2. Написать в консоли >>python manage.py runserver
