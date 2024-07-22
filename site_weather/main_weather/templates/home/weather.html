@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Прогноз погоды на 16 дней</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+        }
+        .header {
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h2{
+            margin-left: 30px;
+        }
+        .city-select {
+            margin-left: auto;
+            width: 20%;
+            margin-right: 30px;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .city-select h4 {
+            margin: 0;
+            margin-right: 10px;
+        }
+        .city-select select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .weather-data {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 60%;
+            margin: 40px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: 20px;
+            padding-left: 30px;
+        }
+        .weather-data > div {
+            width: 30%;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+        }
+        .weather-data > div > h3 {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .weather-data > div > p {
+            font-size: 12px;
+        }
+        .day {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            margin: 0 auto 20px;
+        }
+        .date {
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-right: 20px; 
+            margin-left: 80px; 
+        }
+
+        .search-form {
+            width: 80%;
+            margin: 10px auto;
+            padding: 0px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-form input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            float: left;
+        }
+        .search-form button[type="submit"] {
+            width: 30%;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: black;
+            cursor: pointer;
+            float: right;
+        }
+        .search-form {
+            position: relative;
+        }
+        datalist {
+            position: absolute;
+            left: 0;
+            top: calc(100% + 5px); 
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            z-index: 1;
+            max-height: 200px; 
+            overflow-y: auto;
+        }
+        
+        datalist option {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        datalist option:hover {
+            background-color: #f0f0f0;
+        }
+        .weather-data > div {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .weather-data > div > ul {
+            flex: 1;
+        }
+        
+        .weather-data > div > ul:last-child {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .weather-data > div > ul:last-child li {
+            flex: 1;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Прогноз погоды {{nameCity}}</h2>
+        <div class="city-select">
+            <h4>Город:</h4>
+            <div class="search-form">
+                <form action= "/" method ="">
+                    <input type="text" name="search-input" id="search-input" list="character" placeholder="Введите город">
+                    <datalist id="character"></datalist>
+                    
+                    <template id="resultstemplate">
+                        {% for city in cities %}
+                        <option >{{city}}</option>
+                        {% endfor %}  
+                        </template>
+                    <button type="submit" >Найти</button>
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    <h2 >{{noCity}} </h2>
+    </div>
+    
+    {% for day_context, day_temperature_2m_max, day_datemperature_2m_min, chunk in days %}
+        <div class="day">
+            <div class="date">
+                <h2>{{day_context}}</h2>
+                <div>
+                    <h3>Температура</h3>
+                    <p id="temperature-2m"> Мин: {{day_datemperature_2m_min}}°C, Макс: {{day_temperature_2m_max }}°C </p>
+                </div>
+            </div>
+            <div class="weather-data">
+                <div>
+                    <h3>Температура по часам</h3>
+                    <ul>
+                        {% for temp in chunk.temp %}
+                            <li>{{ temp }}°C</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Относительная влажность по часам</h3>
+                    <ul>
+                        {% for humidity in chunk.humidity %}
+                            <li>{{ humidity }}%</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Ощущаемая температура по часам</h3>
+                    <ul>
+                        {% for apparent_temp in chunk.apparent_temp %}
+                            <li> {{ apparent_temp }}°C</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Вероятность осадков по часам</h3>
+                    <ul>
+                        {% for precipitation_prob in chunk.precipitation_prob %}
+                            <li> {{ precipitation_prob }}%</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Осадки по часам</h3>
+                    <ul>
+                        {% for precipitation in chunk.precipitation %}
+                            <li>{{ precipitation }} мм</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Облачность по часам</h3>
+                    <ul>
+                        {% for cloud_cover in chunk.cloud_cover %}
+                            <li> {{ cloud_cover }}%</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Видимость по часам</h3>
+                    <ul>
+                        {% for  visibility in chunk.visibility %}
+                            <li>{{ visibility }} км</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Скорость ветра по часам</h3>
+                    <ul>
+                        {% for wind_speed in chunk.wind_speed %}
+                            <li>{{ wind_speed }} м/с</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <h3>Ультрафиолетовый индекс по часам</h3>
+                    <ul>
+                        {% for uv_index in chunk.uv_index %}
+                            <li> {{ uv_index }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endfor %} 
+    <script>
+        var search = document.querySelector('#search-input');
+        var results = document.querySelector('#character');
+        var templateContent = document.querySelector('#resultstemplate').content;
+        var searchForm = document.querySelector('#search-form');
+
+        search.addEventListener('input', function handler(event) {
+            while (results.children.length) results.removeChild(results.firstChild);
+            var inputVal = new RegExp(search.value.trim(), 'i');
+            var clonedOptions = templateContent.cloneNode(true);
+            var set = Array.prototype.reduce.call(clonedOptions.children, function searchFilter(frag, el) {
+                if (inputVal.test(el.textContent) && frag.children.length < 5) frag.appendChild(el);
+                return frag;
+            }, document.createDocumentFragment());  
+            results.appendChild(set);
+        });
+
+	</script>
+</body>
+</html>
