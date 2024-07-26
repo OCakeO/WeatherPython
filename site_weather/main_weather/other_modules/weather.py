@@ -98,7 +98,7 @@ def weather_in_city(latitudeCity, longitudeCity):
 	hourly_data_split = []
 	for i in range(0, len(hourly_data["date"]), 24):
 		chunk = {
-			"hour": [f"{(hour.hour + 3) % 24}:00" for hour in hourly_data["date"][i:i+24]],
+			"hours": [f"{(hour.hour + 3) % 24}:00" for hour in hourly_data["date"][i:i+24]],
 			"temp": hourly_data["temperature_2m"][i:i+24].astype(int),
 			"humidity": hourly_data["relative_humidity_2m"][i:i+24].astype(int),
 			"apparent_temp": hourly_data["apparent_temperature"][i:i+24].astype(int),
